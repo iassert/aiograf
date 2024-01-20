@@ -73,9 +73,6 @@ class log:
             name: str = self.__base_name
 
         logger = logging.getLogger(name)
-        if log.__FILE__ is None:
-            return logger
-
         formatter = logging.Formatter('%(levelname)s' + f":{name}\n" + '%(message)s\n%(asctime)s')
 
         if self.__name is not None:

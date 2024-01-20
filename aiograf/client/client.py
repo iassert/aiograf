@@ -1,10 +1,12 @@
 import inspect
 
-from pyrogram import Client
+from pyrogram       import Client
+from pyrogram.types import Message
 
 from ..bot.noraiseclass import noraiseclass
 
-from typing import Union, Any
+from typing  import Union, Any, Callable
+from asyncio import Lock
 
 
 no_rise = noraiseclass()
@@ -87,3 +89,17 @@ class SingleClient(SingletonObjBase, Client):
 
         for i in _new_instances_key:
             SingletonObjMeta._instances[i] = {}
+
+
+def media_group_handler(f: Callable):
+    lock: Lock = Lock()
+    processed_media_groups_ids: list[int] = []
+
+    async def wrapper(client: Client, message: Message, *args, **kwargs) -> None:
+        async with lock:
+            if message.media_group_id in processed_media_groups_ids:
+                return
+            processed_media_groups_ids.append(message.media_group_id)
+        await f(client, message, *args, **kwargs)
+
+    return wrapper
