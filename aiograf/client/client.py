@@ -5,8 +5,8 @@ from pyrogram.types import Message
 
 from ..bot.noraiseclass import noraiseclass
 
-from typing  import Union, Any, Callable
-from asyncio import Lock
+from typing  import Union, Callable, Any
+from asyncio import Lock, Event
 
 
 no_rise = noraiseclass()
@@ -14,6 +14,16 @@ no_rise = noraiseclass()
 class Client_(Client):
     def __init__(self: 'Client_', сlient: Union[Client, 'Client_']) -> None:
         self.__dict__ = сlient.__dict__.copy()
+        self.event: Event = None
+
+    async def idle(self) -> None:
+        self.event = Event()
+        await self.event.wait()
+
+    async def disconnect(self) -> None:
+        if self.event is not None:
+            self.event.set()
+        await super().disconnect()
 
 
 class SingletonObjMeta(type):
