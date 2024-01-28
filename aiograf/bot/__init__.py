@@ -3,6 +3,7 @@ from .api import log
 from .bot import Bot_ as Bot
 from .manage_bot import ManageBot
 from .noraiseclass import noraiseclass
+from .classdict import classdict
 
 __all__ = (
     'manage_bot',
@@ -10,4 +11,5 @@ __all__ = (
     'Bot',
     'ManageBot',
     'noraiseclass',
+    'classdict',
 )
