@@ -3,6 +3,16 @@ from typing import Type, TypeVar
 _T = TypeVar("_T")
 
 
+class ClassDict:
+    def __init__(self, value: dict, defult_key: str) -> None:
+        self.value:     dict = value
+        self.defult_key: str = defult_key
+
+    def __getitem__(self, key):
+        if key not in self.value:
+            return self.value.get(self.defult_key)
+        return self.value.get(key)
+                
 class classdict:
     def __init__(self, *, defult_key: str):
         self.defult_key = defult_key
@@ -11,17 +21,11 @@ class classdict:
         for i, j in cls.__dict__.items():
             if not isinstance(j, dict):
                 continue
-            value: dict = j.copy()
 
-            class Meta(type):
-                def __getitem__(cls, key):
-                    if key not in value:
-                        return value.get(self.defult_key)
-                    return value.get(key)
-
-            class Class(metaclass = Meta):
-                ...
-
-            setattr(cls, i, Class)
+            value = ClassDict(
+                j.copy(), 
+                self.defult_key
+            )
+            setattr(cls, i, value)
 
         return cls
