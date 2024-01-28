@@ -1,7 +1,9 @@
 from .message import Message_ as Message
-from .markups import Markups
+from .callback_query import CallbackQuery_ as CallbackQuery
+from . import markups
 
 __all__ = (
     'Message',
-    'Markups'
+    'CallbackQuery',
+    'markups'
 )
